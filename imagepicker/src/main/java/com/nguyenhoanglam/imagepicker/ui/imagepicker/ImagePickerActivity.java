@@ -226,7 +226,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         presenter.loadImages(config.isFolderMode());
     }
 
-
     private void captureImageWithPermission() {
 
         final String[] permissions = new String[]{Manifest.permission.CAMERA};

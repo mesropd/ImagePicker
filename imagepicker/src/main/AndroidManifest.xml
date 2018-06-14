@@ -11,11 +11,12 @@
         <activity
             android:name=".ui.imagepicker.ImagePickerActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"
             android:theme="@style/imagepicker_ImagePickerTheme" />
 
         <activity
             android:name=".ui.camera.CameraActivty"
-            android:screenOrientation="portrait"
+            android:screenOrientation="unspecified"
             android:theme="@style/imagepicker_CameraTheme" />
 
         <provider
