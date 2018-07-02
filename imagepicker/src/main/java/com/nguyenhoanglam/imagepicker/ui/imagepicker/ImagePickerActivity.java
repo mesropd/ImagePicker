@@ -144,7 +144,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             }
         });
 
-        presenter = new ImagePickerPresenter(new ImageFileLoader(this));
+        presenter = new ImagePickerPresenter(new ImageFileLoader(this, 5));
         presenter.attachView(this);
     }
 

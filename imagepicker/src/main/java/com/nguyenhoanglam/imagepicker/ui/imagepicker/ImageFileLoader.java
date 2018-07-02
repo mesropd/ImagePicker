@@ -29,9 +29,15 @@ public class ImageFileLoader {
 
     private Context context;
     private ExecutorService executorService;
+    private int maxCount = Integer.MAX_VALUE;
 
     public ImageFileLoader(Context context) {
         this.context = context;
+    }
+
+    public ImageFileLoader(Context context, int maxCount) {
+        this.context = context;
+        this.maxCount = maxCount;
     }
 
     private static File makeSafeFile(String path) {
@@ -43,6 +49,14 @@ public class ImageFileLoader {
         } catch (Exception ignored) {
             return null;
         }
+    }
+
+    public int getMaxCount() {
+        return maxCount;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
     }
 
     public void loadDeviceImages(boolean isFolderMode, OnImageLoaderListener listener) {
@@ -106,6 +120,9 @@ public class ImageFileLoader {
                             }
                             folder.getImages().add(image);
                         }
+                    }
+                    if(images.size() >= maxCount) {
+                        break;
                     }
 
                 } while (cursor.moveToPrevious());
