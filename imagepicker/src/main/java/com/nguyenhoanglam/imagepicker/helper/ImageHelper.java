@@ -75,9 +75,9 @@ public class ImageHelper {
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
-    public static List<Image> singleListFromPath(String path) {
+    public static List<Image> singleListFromPath(String path, boolean isVideo) {
         List<Image> images = new ArrayList<>();
-        images.add(new Image(0, getNameFromFilePath(path), path));
+        images.add(new Image(0, getNameFromFilePath(path), path, isVideo));
         return images;
     }
 

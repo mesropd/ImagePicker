@@ -60,7 +60,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
                             if (path != null) {
                                 path = imagePath;
                             }
-                            imageReadyListener.onImageReady(ImageHelper.singleListFromPath(path));
+                            imageReadyListener.onImageReady(ImageHelper.singleListFromPath(path, false));
                             ImageHelper.revokeAppPermission(context, imageUri);
                         }
                     });

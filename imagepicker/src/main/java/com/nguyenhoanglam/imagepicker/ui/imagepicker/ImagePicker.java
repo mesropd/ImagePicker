@@ -167,6 +167,11 @@ public class ImagePicker {
             return this;
         }
 
+        public Builder setLoadVideos(boolean isLoadVideos) {
+            config.setLoadVideos(isLoadVideos);
+            return this;
+        }
+
         public Builder setMaxSize(int maxSize) {
             config.setMaxSize(maxSize);
             return this;

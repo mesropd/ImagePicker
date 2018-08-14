@@ -22,17 +22,20 @@ public class Image implements Parcelable {
     private long id;
     private String name;
     private String path;
+    private boolean isVideo;
 
-    public Image(long id, String name, String path) {
+    public Image(long id, String name, String path, boolean isVideo) {
         this.id = id;
         this.name = name;
         this.path = path;
+        this.isVideo = isVideo;
     }
 
     protected Image(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
         this.path = in.readString();
+        this.isVideo = in.readInt() != 0;
     }
 
     public long getId() {
@@ -59,6 +62,14 @@ public class Image implements Parcelable {
         this.path = path;
     }
 
+    public boolean isVideo() {
+        return isVideo;
+    }
+
+    public void setVideo(boolean video) {
+        isVideo = video;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,6 +89,7 @@ public class Image implements Parcelable {
         dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeString(this.path);
+        dest.writeInt(this.isVideo ? 1 : 0);
     }
 
 }

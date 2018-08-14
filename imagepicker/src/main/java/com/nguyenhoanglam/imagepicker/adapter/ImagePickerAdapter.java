@@ -58,6 +58,13 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
                 ? ContextCompat.getDrawable(getContext(), R.drawable.imagepicker_ic_selected)
                 : null);
 
+        if(image.isVideo()) {
+            viewHolder.videoIndicator.setVisibility(View.VISIBLE);
+        }
+        else {
+            viewHolder.videoIndicator.setVisibility(View.INVISIBLE);
+        }
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +144,7 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         private ImageView image;
         private View alphaView;
         private View gifIndicator;
+        private View videoIndicator;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -144,9 +152,7 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
             image = itemView.findViewById(R.id.image_thumbnail);
             alphaView = itemView.findViewById(R.id.view_alpha);
             gifIndicator = itemView.findViewById(R.id.gif_indicator);
-
+            videoIndicator = itemView.findViewById(R.id.videoIndicator);
         }
-
     }
-
 }

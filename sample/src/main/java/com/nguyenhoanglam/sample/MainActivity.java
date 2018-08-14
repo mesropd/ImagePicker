@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCameraOnly(cameraOnly)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
+                .setLoadVideos(true)
                 .setSelectedImages(images)
                 .setMaxSize(10)
                 .setKeepScreenOn(true)

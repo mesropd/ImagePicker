@@ -29,4 +29,13 @@
         android:text="@string/imagepicker_text_gif"
         android:textColor="@color/imagepicker_white"
         android:visibility="visible" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="12dp"
+        android:id="@+id/videoIndicator"
+        android:src="@drawable/ic_video"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="10dp"/>
+
 </com.nguyenhoanglam.imagepicker.widget.SquareFrameLayout>

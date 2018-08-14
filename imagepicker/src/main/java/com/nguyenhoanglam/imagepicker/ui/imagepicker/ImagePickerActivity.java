@@ -144,7 +144,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             }
         });
 
-        presenter = new ImagePickerPresenter(new ImageFileLoader(this, 5));
+        presenter = new ImagePickerPresenter(new ImageFileLoader(this));
         presenter.attachView(this);
     }
 
@@ -223,7 +223,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     private void getData() {
         presenter.abortLoading();
-        presenter.loadImages(config.isFolderMode());
+        presenter.loadImages(config.isFolderMode(), config.isLoadVideos());
     }
 
     private void captureImageWithPermission() {

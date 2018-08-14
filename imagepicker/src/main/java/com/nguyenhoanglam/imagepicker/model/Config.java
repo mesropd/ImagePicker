@@ -46,6 +46,7 @@ public class Config implements Parcelable {
     private boolean isMultipleMode;
     private boolean isFolderMode;
     private boolean isShowCamera;
+    private boolean isLoadVideos;
     private int maxSize;
     private String doneTitle;
     private String folderTitle;
@@ -70,6 +71,7 @@ public class Config implements Parcelable {
         this.isMultipleMode = in.readByte() != 0;
         this.isFolderMode = in.readByte() != 0;
         this.isShowCamera = in.readByte() != 0;
+        this.isLoadVideos = in.readByte() != 0;
         this.maxSize = in.readInt();
         this.doneTitle = in.readString();
         this.folderTitle = in.readString();
@@ -178,6 +180,14 @@ public class Config implements Parcelable {
         isShowCamera = showCamera;
     }
 
+    public boolean isLoadVideos() {
+        return isLoadVideos;
+    }
+
+    public void setLoadVideos(boolean loadVideos) {
+        isLoadVideos = loadVideos;
+    }
+
     public int getMaxSize() {
         return maxSize;
     }
@@ -259,6 +269,7 @@ public class Config implements Parcelable {
         dest.writeByte(this.isMultipleMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFolderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isLoadVideos ? (byte) 1 : (byte) 0);
         dest.writeInt(this.maxSize);
         dest.writeString(this.doneTitle);
         dest.writeString(this.folderTitle);

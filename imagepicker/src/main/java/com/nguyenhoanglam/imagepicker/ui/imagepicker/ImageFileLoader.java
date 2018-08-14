@@ -29,15 +29,9 @@ public class ImageFileLoader {
 
     private Context context;
     private ExecutorService executorService;
-    private int maxCount = Integer.MAX_VALUE;
 
     public ImageFileLoader(Context context) {
         this.context = context;
-    }
-
-    public ImageFileLoader(Context context, int maxCount) {
-        this.context = context;
-        this.maxCount = maxCount;
     }
 
     private static File makeSafeFile(String path) {
@@ -51,16 +45,8 @@ public class ImageFileLoader {
         }
     }
 
-    public int getMaxCount() {
-        return maxCount;
-    }
-
-    public void setMaxCount(int maxCount) {
-        this.maxCount = maxCount;
-    }
-
-    public void loadDeviceImages(boolean isFolderMode, OnImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, listener));
+    public void loadDeviceImages(boolean isFolderMode, boolean isLoadVideos, OnImageLoaderListener listener) {
+        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, isLoadVideos, listener));
     }
 
     public void abortLoadImages() {
@@ -78,38 +64,41 @@ public class ImageFileLoader {
     }
 
     private class ImageLoadRunnable implements Runnable {
-
         private boolean isFolderMode;
+        private boolean isLoadVideos;
         private OnImageLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, OnImageLoaderListener listener) {
+        public ImageLoadRunnable(boolean isFolderMode, boolean isLoadVideos, OnImageLoaderListener listener) {
             this.isFolderMode = isFolderMode;
+            this.isLoadVideos = isLoadVideos;
             this.listener = listener;
         }
 
         @Override
         public void run() {
-            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
+            Cursor imagesCursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
+                    null, null, MediaStore.Images.Media.DATE_ADDED);
+            Cursor videosCursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection,
                     null, null, MediaStore.Images.Media.DATE_ADDED);
 
-            if (cursor == null) {
+            if (imagesCursor == null || videosCursor == null) {
                 listener.onFailed(new NullPointerException());
                 return;
             }
 
-            List<Image> images = new ArrayList<>(cursor.getCount());
+            List<Image> images = new ArrayList<>(imagesCursor.getCount() + videosCursor.getCount());
             Map<String, Folder> folderMap = isFolderMode ? new LinkedHashMap<String, Folder>() : null;
 
-            if (cursor.moveToLast()) {
+            if (imagesCursor.moveToLast()) {
                 do {
-                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                    String name = cursor.getString(cursor.getColumnIndex(projection[1]));
-                    String path = cursor.getString(cursor.getColumnIndex(projection[2]));
-                    String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
+                    long id = imagesCursor.getLong(imagesCursor.getColumnIndex(projection[0]));
+                    String name = imagesCursor.getString(imagesCursor.getColumnIndex(projection[1]));
+                    String path = imagesCursor.getString(imagesCursor.getColumnIndex(projection[2]));
+                    String bucket = imagesCursor.getString(imagesCursor.getColumnIndex(projection[3]));
 
                     File file = makeSafeFile(path);
                     if (file != null && file.exists()) {
-                        Image image = new Image(id, name, path);
+                        Image image = new Image(id, name, path, false);
                         images.add(image);
 
                         if (folderMap != null) {
@@ -121,13 +110,34 @@ public class ImageFileLoader {
                             folder.getImages().add(image);
                         }
                     }
-                    if(images.size() >= maxCount) {
-                        break;
-                    }
-
-                } while (cursor.moveToPrevious());
+                } while (imagesCursor.moveToPrevious());
             }
-            cursor.close();
+            imagesCursor.close();
+
+            if (videosCursor.moveToLast() && isLoadVideos) {
+                do {
+                    long id = videosCursor.getLong(videosCursor.getColumnIndex(projection[0]));
+                    String name = videosCursor.getString(videosCursor.getColumnIndex(projection[1]));
+                    String path = videosCursor.getString(videosCursor.getColumnIndex(projection[2]));
+                    String bucket = videosCursor.getString(videosCursor.getColumnIndex(projection[3]));
+
+                    File file = makeSafeFile(path);
+                    if (file != null && file.exists()) {
+                        Image image = new Image(id, name, path, true);
+                        images.add(image);
+
+                        if (folderMap != null) {
+                            Folder folder = folderMap.get(bucket);
+                            if (folder == null) {
+                                folder = new Folder(bucket);
+                                folderMap.put(bucket, folder);
+                            }
+                            folder.getImages().add(image);
+                        }
+                    }
+                } while (videosCursor.moveToPrevious());
+            }
+            videosCursor.close();
 
             /* Convert HashMap to ArrayList if not null */
             List<Folder> folders = null;
