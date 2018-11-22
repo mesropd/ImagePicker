@@ -3,14 +3,14 @@ ImagePicker
 
 A simple library that allows you to select images from the device library or directly from the camera.
 
-[![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
+[![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 [![Join the chat at https://gitter.im/ImagePicker/BugAndFeature](https://badges.gitter.im/ImagePicker/Lobby.svg)](https://gitter.im/ImagePicker/BugAndFeature?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Screenshots
 --------
 
-<img src="https://user-images.githubusercontent.com/4979755/29860123-18cdb978-8d8f-11e7-9020-535f9507c993.png" height="683" width="384"> <img src="https://user-images.githubusercontent.com/4979755/29860122-18c6ed5a-8d8f-11e7-9726-e916c0c4670e.png" height="683" width="384">
+<img src="https://user-images.githubusercontent.com/4979755/41592707-a8c7b4b8-73e7-11e8-9273-ba4900f69f87.png" height="683" width="384"> <img src="https://user-images.githubusercontent.com/4979755/41592708-a906efde-73e7-11e8-9681-dfa8047ccacd.png" height="683" width="384">
 
 Download
 --------
@@ -29,8 +29,14 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    compile 'com.github.nguyenhoanglam:ImagePicker:1.2.1'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.1'
 }
+```
+
+You NEED to migrate your project to support AndroidX by add following lines on gradle.properties file:
+```java
+android.useAndroidX=true
+android.enableJetifier=true
 ```
 
 Usage
@@ -56,6 +62,8 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
            .setMaxSize(10)                     //  Max images can be selected
            .setSavePath("ImagePicker")         //  Image capture folder name
            .setSelectedImages(images)          //  Selected images
+           .setAlwaysShowDoneButton(true)      //  Set always show done button in multiple mode
+           .setRequestCode(100)                //  Set request code, default Config.RC_PICK_IMAGES
            .setKeepScreenOn(true)              //  Keep screen on when selecting images
            .start();                           //  Start ImagePicker    
 ```
@@ -69,17 +77,17 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
         // do your logic here...
     }
-    super.onActivityResult(requestCode, resultCode, data);  // THIS METHOD SHOULD BE HERE so that ImagePicker works with fragment
+    super.onActivityResult(requestCode, resultCode, data);  // You MUST have this line to be here
+                                                            // so ImagePicker can work with fragment mode
 }
 ```
 
 What's New
 --------
 
-- Auto select image after capturing from camera.
-- Add additional method ```getIntent()``` that return an ImagePicker intent so we can start ImagePicker manually.
-- Set custom seletion limit message.
-- Set keep screen on when selecting images.
+- Migrate to AndroidX
+- Allow to set request code
+- Support Glide 4.8.0
 
 
 License

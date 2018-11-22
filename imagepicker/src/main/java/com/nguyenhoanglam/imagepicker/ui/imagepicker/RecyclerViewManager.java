@@ -3,8 +3,8 @@ package com.nguyenhoanglam.imagepicker.ui.imagepicker;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Parcelable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
@@ -175,6 +175,6 @@ public class RecyclerViewManager {
     }
 
     public boolean isShowDoneButton() {
-        return config.isMultipleMode() && imageAdapter.getSelectedImages().size() > 0;
+        return config.isMultipleMode() && (config.isAlwaysShowDoneButton() || imageAdapter.getSelectedImages().size() > 0);
     }
 }

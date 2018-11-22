@@ -71,15 +71,6 @@ public class Image implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Image image = (Image) o;
-        return image.getPath().equalsIgnoreCase(getPath());
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }
@@ -91,5 +82,4 @@ public class Image implements Parcelable {
         dest.writeString(this.path);
         dest.writeInt(this.isVideo ? 1 : 0);
     }
-
 }
