@@ -25,7 +25,7 @@ public class ImageHelper {
 
     private static final String TAG = "ImageHelper";
 
-    public static File createImageFile(SavePath savePath) {
+    public static File createImageFile(SavePath savePath, boolean isVideo) {
         // External sdcard location
         final String path = savePath.getPath();
         File mediaStorageDir = savePath.isFullPath()
@@ -44,8 +44,9 @@ public class ImageHelper {
         String imageFileName = "IMG_" + timeStamp;
 
         File imageFile = null;
+        String postfix = isVideo ? ".mp4" : ".jpg";
         try {
-            imageFile = File.createTempFile(imageFileName, ".jpg", mediaStorageDir);
+            imageFile = File.createTempFile(imageFileName, postfix, mediaStorageDir);
         } catch (IOException e) {
             Log.d(TAG, "Oops! Failed create " + imageFileName + " file");
         }
