@@ -9,16 +9,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
-import com.nguyenhoanglam.imagepicker.helper.CameraHelper;
 import com.nguyenhoanglam.imagepicker.helper.LogHelper;
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnBackAction;
@@ -72,13 +71,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         @Override
         public void onClick(View view) {
             onBackPressed();
-        }
-    };
-
-    private View.OnClickListener cameraClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            captureImageWithPermission();
         }
     };
 
@@ -151,7 +143,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void setupToolbar() {
         toolbar.config(config);
         toolbar.setOnBackClickListener(backClickListener);
-        toolbar.setOnCameraClickListener(cameraClickListener);
         toolbar.setOnDoneClickListener(doneClickListener);
     }
 
@@ -226,56 +217,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         presenter.loadImages(config.isFolderMode(), config.isLoadVideos());
     }
 
-    private void captureImageWithPermission() {
-
-        final String[] permissions = new String[]{Manifest.permission.CAMERA};
-
-        PermissionHelper.checkPermission(this, Manifest.permission.CAMERA, new PermissionHelper.PermissionAskListener() {
-            @Override
-            public void onNeedPermission() {
-                PermissionHelper.requestAllPermissions(ImagePickerActivity.this, permissions, Config.RC_CAMERA_PERMISSION);
-            }
-
-            @Override
-            public void onPermissionPreviouslyDenied() {
-                PermissionHelper.requestAllPermissions(ImagePickerActivity.this, permissions, Config.RC_CAMERA_PERMISSION);
-            }
-
-            @Override
-            public void onPermissionDisabled() {
-                snackBar.show(R.string.imagepicker_msg_no_camera_permission, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        PermissionHelper.openAppSettings(ImagePickerActivity.this);
-                    }
-                });
-            }
-
-            @Override
-            public void onPermissionGranted() {
-                captureImage();
-            }
-        });
-    }
-
-
-    private void captureImage() {
-        if (!CameraHelper.checkCameraAvailability(this)) {
-            return;
-        }
-        presenter.captureImage(this, config, Config.RC_CAPTURE_IMAGE);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Config.RC_CAPTURE_IMAGE && resultCode == RESULT_OK) {
-            presenter.finishCaptureImage(this, data, config);
-        }
-    }
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -289,16 +230,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 logger.e("Permission not granted: results len = " + grantResults.length +
                         " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
                 finish();
-            }
-            case Config.RC_CAMERA_PERMISSION: {
-                if (PermissionHelper.hasGranted(grantResults)) {
-                    logger.d("Camera permission granted");
-                    captureImage();
-                    return;
-                }
-                logger.e("Permission not granted: results len = " + grantResults.length +
-                        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-                break;
             }
             default: {
                 logger.d("Got unexpected permission result: " + requestCode);

@@ -9,13 +9,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import androidx.fragment.app.Fragment;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.model.SavePath;
-import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivty;
+import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivity;
 
 import java.util.ArrayList;
 
@@ -35,10 +34,6 @@ public class ImagePicker {
         return new ActivityBuilder(activity);
     }
 
-    public static Builder with(Fragment fragment) {
-        return new FragmentBuilder(fragment);
-    }
-
     static class ActivityBuilder extends Builder {
         private Activity activity;
 
@@ -55,7 +50,7 @@ public class ImagePicker {
                 activity.startActivityForResult(intent, requestCode);
             } else {
                 activity.overridePendingTransition(0, 0);
-                activity.startActivityForResult(intent, requestCode);
+                activity.startActivity(intent);
             }
         }
 
@@ -66,42 +61,7 @@ public class ImagePicker {
                 intent = new Intent(activity, ImagePickerActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
             } else {
-                intent = new Intent(activity, CameraActivty.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            }
-            return intent;
-        }
-    }
-
-    static class FragmentBuilder extends Builder {
-        private Fragment fragment;
-
-        public FragmentBuilder(Fragment fragment) {
-            super(fragment);
-            this.fragment = fragment;
-        }
-
-        @Override
-        public void start() {
-            Intent intent = getIntent();
-            int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_IMAGES;
-            if (!config.isCameraOnly()) {
-                fragment.startActivityForResult(intent, requestCode);
-            } else {
-                fragment.getActivity().overridePendingTransition(0, 0);
-                fragment.startActivityForResult(intent, requestCode);
-            }
-        }
-
-        @Override
-        public Intent getIntent() {
-            Intent intent;
-            if (!config.isCameraOnly()) {
-                intent = new Intent(fragment.getActivity(), ImagePickerActivity.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-            } else {
-                intent = new Intent(fragment.getActivity(), CameraActivty.class);
+                intent = new Intent(activity, CameraActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             }
@@ -113,10 +73,6 @@ public class ImagePicker {
 
         public Builder(Activity activity) {
             super(activity);
-        }
-
-        public Builder(Fragment fragment) {
-            super(fragment.getContext());
         }
 
         public Builder setToolbarColor(String toolbarColor) {

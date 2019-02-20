@@ -7,11 +7,11 @@ package com.nguyenhoanglam.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
@@ -20,6 +20,10 @@ import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.model.SavePath;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCameraOnly(cameraOnly)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
-                .setLoadVideos(true)
+                .setLoadVideos(false)
                 .setSelectedImages(images)
                 .setMaxSize(10)
                 .setBackgroundColor("#212121")
@@ -132,5 +136,22 @@ public class MainActivity extends AppCompatActivity {
         } else {
             fm.beginTransaction().remove(fragment).commitAllowingStateLoss();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Image image) {
+        adapter.addImage(image);
     }
 }

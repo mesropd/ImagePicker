@@ -1,7 +1,7 @@
 package com.nguyenhoanglam.sample;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +52,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     public void setData(List<Image> images) {
         this.images.clear();
-        if (images != null) {
-            this.images.addAll(images);
-        }
+        this.images.addAll(images);
         notifyDataSetChanged();
+    }
+
+    public void addImage(Image image) {
+        this.images.add(image);
+        notifyDataSetChanged();;
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {

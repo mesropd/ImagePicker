@@ -14,7 +14,6 @@ import com.nguyenhoanglam.imagepicker.model.SavePath;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,10 +75,8 @@ public class ImageHelper {
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
-    public static List<Image> singleListFromPath(String path, boolean isVideo) {
-        List<Image> images = new ArrayList<>();
-        images.add(new Image(0, getNameFromFilePath(path), path, isVideo));
-        return images;
+    public static Image getImageFromPath(String path, boolean isVideo) {
+       return  new Image(0, getNameFromFilePath(path), path, isVideo);
     }
 
     public static boolean isGifFormat(Image image) {

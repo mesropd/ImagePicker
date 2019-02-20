@@ -8,9 +8,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 
 /**
  * Created by hoanglam on 8/21/17.
